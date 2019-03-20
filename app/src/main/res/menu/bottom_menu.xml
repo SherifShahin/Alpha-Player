@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/all_songs"
+        android:title="Songs"
+        android:icon="@mipmap/play_noshadow_dark"
+        />
+
+    <item
+        android:id="@+id/Favourites"
+        android:title="Favourites"
+        android:icon="@mipmap/like"
+        />
+
+    <item
+        android:id="@+id/Folders"
+        android:title="Folders"
+        android:icon="@drawable/folders_icon"
+        ></item>
+
+
+</menu>
