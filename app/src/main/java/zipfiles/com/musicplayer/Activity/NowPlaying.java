@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import zipfiles.com.musicplayer.Adapter.AllSongsAdapter;
@@ -51,7 +52,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     private MusicPlayerControl control;
 
 
-    private static boolean thread=false;
+    private boolean thread=false;
 
 
     private RecyclerView recyclerView;
@@ -80,7 +81,6 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         ShuffleState=findViewById(R.id.shuffle_state);
         recyclerView=findViewById(R.id.nowplaying_list_recycleview);
 
-        thread=false;
 
         control=MusicPlayerControl.getinstace(this);
 
@@ -91,63 +91,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
 
         duration.setText(currentduration);
 
-        updateseekbar = new Thread() {
-            @Override
-            public void run() {
-                int currentposition = 0;
-                String currentpositonString;
-
-                while(!thread) {
-                    try {
-                        sleep(500);
-                        currentposition = control.getCurrentPosition();
-                        seekBar.setProgress(currentposition);
-                        currentpositonString = control.getCurrentPositionInString();
-                        songposition.setText(currentpositonString);
-
-                        if(control.getState().equalsIgnoreCase("pause"))
-                        {
-                            SongPlayState.setImageResource(R.drawable.play);
-
-                        }
-
-                        else if(control.getState().equalsIgnoreCase("play") || control.getState().equalsIgnoreCase("playFirst"))
-                        {
-                            SongPlayState.setImageResource(R.drawable.pause);
-                        }
-
-                        else if(control.getState().equalsIgnoreCase("stop")) {
-                            SongPlayState.setImageResource(R.drawable.play);
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        };
-
-        seekBar.setMax(control.getCurrentDuration());
-        updateseekbar.start();
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                control.seekTo(seekBar.getProgress());
-            }
-        });
-
-
+        new Threading().execute();
 
         if(control.getSong().getImage() != null) {
             SongImage.setImageBitmap(control.getSong().getImage());
@@ -380,20 +324,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     protected void onDestroy() {
         Log.e("destroy","on it");
 
-
-        if(updateseekbar != null)
-        {
           thread=true;
-
-          if(updateseekbar.isAlive())
-          {
-              Log.e("destroy","still alive"+updateseekbar.getId());
-          }
-          else
-          {
-              Log.e("destroy","destroied");
-          }
-        }
 
         super.onDestroy();
     }
@@ -412,6 +343,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         super.onResume();
         control.setIn_Now_Playing(true);
         thread=false;
+        new Threading().execute();
     }
 
 
@@ -436,6 +368,85 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
 
         control.setIn_Now_Playing(true);
 
+    }
+
+
+    public class Threading extends AsyncTask<Void,Integer,Integer>
+    {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            seekBar.setMax(control.getCurrentDuration());
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    control.seekTo(seekBar.getProgress());
+                }
+            });
+
+            thread=false;
+
+        }
+
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            seekBar.setProgress(values[0]);
+            String currentpositonString = control.getCurrentPositionInString();
+            songposition.setText(currentpositonString);
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+
+            int currentposition = 0;
+
+               while (!thread) {
+
+                   try {
+                       Thread.sleep(200);
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+
+                   currentposition = control.getCurrentPosition();
+                   publishProgress(currentposition);
+
+                   if (control.getState().equalsIgnoreCase("pause")) {
+                       SongPlayState.setImageResource(R.drawable.play);
+
+                   } else if (control.getState().equalsIgnoreCase("play") || control.getState().equalsIgnoreCase("playFirst")) {
+                       SongPlayState.setImageResource(R.drawable.pause);
+                   } else if (control.getState().equalsIgnoreCase("stop")) {
+                       SongPlayState.setImageResource(R.drawable.play);
+                   }
+               }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer)
+        {
+            super.onPostExecute(integer);
+            thread=true;
+            cancel(true);
+        }
     }
 
 
