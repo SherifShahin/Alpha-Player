@@ -48,6 +48,9 @@ public class FavouritesFragment extends Fragment
         mediaMetadataRetriever =new MediaMetadataRetriever();
 
         control=MusicPlayerControl.getinstace(getContext());
+
+        control.releaseFav();
+
         fav_frag_songs=new ArrayList<>();
 
         if(control.getList() != null) {

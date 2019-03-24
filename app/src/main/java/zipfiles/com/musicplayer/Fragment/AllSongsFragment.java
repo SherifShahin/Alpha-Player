@@ -73,20 +73,17 @@ public class AllSongsFragment extends Fragment
         {
             if(!musicPlayerControl.getList().isEmpty()) {
                 songs = musicPlayerControl.getList();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         }
         else {
             songs = findSongs(file);
             musicPlayerControl.setList(songs);
+            musicPlayerControl.setFolders(folders);
         }
 
 
         musicPlayerControl.releaseFav();
-
-        if(musicPlayerControl.getFolders() == null)
-        {
-            musicPlayerControl.setFolders(folders);
-        }
 
 
         allSongsAdapter=new AllSongsAdapter(songs,getContext());
@@ -154,6 +151,7 @@ public class AllSongsFragment extends Fragment
         }
 
         progressBar.setVisibility(View.INVISIBLE);
+
         return songs;
     }
 

@@ -32,8 +32,6 @@ public class FolderSongs extends AppCompatActivity
 
         recyclerView=findViewById(R.id.folder_songs_recycleview);
 
-        control.setCurrent_list(control.getCurrentFolder().getSongs());
-
         allSongsAdapter=new AllSongsAdapter(control.getCurrentFolder().getSongs(),this);
         recyclerView.setAdapter(allSongsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));

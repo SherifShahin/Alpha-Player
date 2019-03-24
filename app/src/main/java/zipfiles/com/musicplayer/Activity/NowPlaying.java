@@ -426,15 +426,6 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
 
                    currentposition = control.getCurrentPosition();
                    publishProgress(currentposition);
-
-                   if (control.getState().equalsIgnoreCase("pause")) {
-                       SongPlayState.setImageResource(R.drawable.play);
-
-                   } else if (control.getState().equalsIgnoreCase("play") || control.getState().equalsIgnoreCase("playFirst")) {
-                       SongPlayState.setImageResource(R.drawable.pause);
-                   } else if (control.getState().equalsIgnoreCase("stop")) {
-                       SongPlayState.setImageResource(R.drawable.play);
-                   }
                }
 
             return null;
@@ -448,6 +439,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             cancel(true);
         }
     }
+
 
 
 }

@@ -19,8 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activity.MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +37,6 @@
             android:label="Now Playing"
             />
         <activity android:name=".Activity.FolderSongs"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             ></activity>
     </application>
 
