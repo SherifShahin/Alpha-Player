@@ -16,8 +16,9 @@ import zipfiles.com.musicplayer.Model.Folder;
 import zipfiles.com.musicplayer.Model.Song;
 import zipfiles.com.musicplayer.Service.BackgroundService;
 import zipfiles.com.musicplayer.Storage.SharedPrefManger;
+import zipfiles.com.musicplayer.Subscriber;
 
-public class MusicPlayerControl
+public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 {
     private static MediaPlayer  musicplayer;
     private static MusicPlayerControl instance;
@@ -46,6 +47,8 @@ public class MusicPlayerControl
 
     private static String shuffleState="";
 
+    private ArrayList<Subscriber> subscribers;
+
 
     public MusicPlayerControl(Context context)
     {
@@ -69,6 +72,7 @@ public class MusicPlayerControl
         musicplayer.setLooping(true);
         mediaMetadataRetriever=new MediaMetadataRetriever();
         list=new ArrayList<>();
+        subscribers=new ArrayList<>();
     }
 
     public static MusicPlayerControl getinstace(Context context)
@@ -109,6 +113,7 @@ public class MusicPlayerControl
 
     public void setState(String state) {
         this.state = state;
+        notifySubscribers();
     }
 
     public ArrayList<Song> getList() {
@@ -128,21 +133,17 @@ public class MusicPlayerControl
 
     public void playForFirstTime()
     {
-        musicplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
+        musicplayer.setOnPreparedListener(this);
 
         musicplayer.prepareAsync();
+
+        setState("playFirst");
     }
 
 
     public void play()
     {
         musicplayer.start();
-
     }
 
 
@@ -437,4 +438,31 @@ public class MusicPlayerControl
     public void setShuffleState(String shuffleState) {
         this.shuffleState = shuffleState;
     }
+
+    @Override
+    public void onPrepared(MediaPlayer mp)
+    {
+        mp.start();
+    }
+
+
+    public void subscribe(Subscriber subscriber)
+    {
+        subscribers.add(subscriber);
+    }
+
+    public void unsubscribe(Subscriber subscriber)
+    {
+        int index=subscribers.indexOf(subscriber);
+        subscribers.remove(index);
+    }
+
+    public void notifySubscribers()
+    {
+        for(Subscriber subscriber:subscribers)
+        {
+            subscriber.update(state);
+        }
+    }
+
 }

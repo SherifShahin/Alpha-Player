@@ -56,8 +56,6 @@ public class FavouritesFragment extends Fragment
         if(control.getList() != null) {
             fav_frag_songs = control.getFav_list();
 
-            Log.e("Favourite frag"," "+fav_frag_songs.size());
-
             for(int i=0;i<fav_frag_songs.size();i++)
             {
                 mediaMetadataRetriever.setDataSource(fav_frag_songs.get(i).getPath());

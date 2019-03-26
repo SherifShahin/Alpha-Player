@@ -24,8 +24,9 @@ import zipfiles.com.musicplayer.Fragment.FavouritesFragment;
 import zipfiles.com.musicplayer.Fragment.FolderFragment;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
 import zipfiles.com.musicplayer.R;
+import zipfiles.com.musicplayer.Subscriber;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,View.OnClickListener
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,View.OnClickListener,Subscriber
 {
     private BottomNavigationView bottomNavigationView;
 
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         control=MusicPlayerControl.getinstace(this);
+
+        control.subscribe(this);
 
         imageView=findViewById(R.id.main_music_control_layout_image);
         title=findViewById(R.id.main_music_control_layout_title);
@@ -219,5 +222,34 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         }
 
+    }
+
+    @Override
+    public void update(String state) {
+
+        if(state.equalsIgnoreCase("pause"))
+        {
+            playstate.setImageResource(R.drawable.play);
+            rotate.cancel();
+            rotate.reset();
+        }
+
+        else if(state.equalsIgnoreCase("playFirst"))
+        {
+            imageView.setImageBitmap(control.getSong().getImage());
+            title.setText(control.getSong().getTitle());
+            artist.setText(control.getSong().getArtist());
+        }
+        else if(state.equalsIgnoreCase("play"))
+        {
+            playstate.setImageResource(R.drawable.pause);
+            imageView.startAnimation(rotate);
+        }
+        else if(state.equalsIgnoreCase("stop"))
+        {
+            playstate.setImageResource(R.drawable.play);
+            rotate.cancel();
+            rotate.reset();
+        }
     }
 }

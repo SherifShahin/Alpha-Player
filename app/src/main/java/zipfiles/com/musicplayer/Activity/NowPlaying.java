@@ -26,11 +26,10 @@ import zipfiles.com.musicplayer.Adapter.NowPlayingAdapter;
 import zipfiles.com.musicplayer.BlurBuilder;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
 import zipfiles.com.musicplayer.R;
+import zipfiles.com.musicplayer.Subscriber;
 
 
-
-
-public class NowPlaying extends AppCompatActivity implements View.OnClickListener
+public class NowPlaying extends AppCompatActivity implements View.OnClickListener ,Subscriber
 {
 
     private LinearLayout layout;
@@ -83,6 +82,8 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
 
 
         control=MusicPlayerControl.getinstace(this);
+
+        control.subscribe(this);
 
         SongTitle.setText(control.getSong().getTitle());
         SongArtist.setText(control.getSong().getArtist());
@@ -367,6 +368,35 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         super.onStart();
 
         control.setIn_Now_Playing(true);
+
+    }
+
+    @Override
+    public void update(String state)
+    {
+        if(state.equalsIgnoreCase("pause"))
+        {
+            SongPlayState.setImageResource(R.drawable.play);
+            rotate.cancel();
+            rotate.reset();
+        }
+
+        else if(state.equalsIgnoreCase("playFirst"))
+        {
+            thread=true;
+            recreate();
+        }
+        else if(state.equalsIgnoreCase("play"))
+        {
+            SongPlayState.setImageResource(R.drawable.pause);
+            SongImage.startAnimation(rotate);
+        }
+        else if(state.equalsIgnoreCase("stop"))
+        {
+            SongPlayState.setImageResource(R.drawable.play);
+            rotate.cancel();
+            rotate.reset();
+        }
 
     }
 
