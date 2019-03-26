@@ -15,18 +15,15 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import zipfiles.com.musicplayer.Adapter.AllSongsAdapter;
 import zipfiles.com.musicplayer.Adapter.NowPlayingAdapter;
 import zipfiles.com.musicplayer.BlurBuilder;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
 import zipfiles.com.musicplayer.R;
-import zipfiles.com.musicplayer.Subscriber;
+import zipfiles.com.musicplayer.Interface.Subscriber;
 
 
 public class NowPlaying extends AppCompatActivity implements View.OnClickListener ,Subscriber

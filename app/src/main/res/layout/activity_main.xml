@@ -25,6 +25,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:id="@+id/main_music_control_layout_image"
+            android:transitionName="songimage"
             />
 
         <LinearLayout
@@ -44,7 +45,9 @@
                 android:textColor="@android:color/white"
                 android:textSize="14dp"
                 android:gravity="left"
-                android:id="@+id/main_music_control_layout_title" />
+                android:id="@+id/main_music_control_layout_title"
+                android:transitionName="songtitle"
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,6 +59,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="10dp"
                 android:id="@+id/main_music_control_layout_artist"
+                android:transitionName="songartist"
                 />
 
         </LinearLayout>

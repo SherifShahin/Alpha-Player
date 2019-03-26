@@ -1,4 +1,4 @@
-package zipfiles.com.musicplayer;
+package zipfiles.com.musicplayer.Interface;
 
 public interface Subscriber
 {

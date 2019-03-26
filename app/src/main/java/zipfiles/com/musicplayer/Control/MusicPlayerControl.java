@@ -2,7 +2,6 @@ package zipfiles.com.musicplayer.Control;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 
@@ -16,7 +15,7 @@ import zipfiles.com.musicplayer.Model.Folder;
 import zipfiles.com.musicplayer.Model.Song;
 import zipfiles.com.musicplayer.Service.BackgroundService;
 import zipfiles.com.musicplayer.Storage.SharedPrefManger;
-import zipfiles.com.musicplayer.Subscriber;
+import zipfiles.com.musicplayer.Interface.Subscriber;
 
 public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 {
@@ -364,7 +363,6 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
     {
         this.repeatType = repeatType;
         this.context=context;
-        intentToService(state);
     }
 
 

@@ -1,11 +1,12 @@
 package zipfiles.com.musicplayer.Activity;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,16 +16,14 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import zipfiles.com.musicplayer.BlurBuilder;
 import zipfiles.com.musicplayer.Fragment.AllSongsFragment;
 import zipfiles.com.musicplayer.Fragment.FavouritesFragment;
 import zipfiles.com.musicplayer.Fragment.FolderFragment;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
 import zipfiles.com.musicplayer.R;
-import zipfiles.com.musicplayer.Subscriber;
+import zipfiles.com.musicplayer.Interface.Subscriber;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,View.OnClickListener,Subscriber
 {
@@ -188,7 +187,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     {
         if(v == layout)
         {
-         startActivity(new Intent(this,NowPlaying.class));
+            ActivityOptionsCompat activityOptions= null;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        Pair.create(findViewById(R.id.main_music_control_layout_title), "songtitle"),
+                        Pair.create(findViewById(R.id.main_music_control_layout_artist), "songartist")
+                );
+                startActivity(new Intent(this,NowPlaying.class),activityOptions.toBundle());
+            }
+
+            else
+               startActivity(new Intent(this,NowPlaying.class));
         }
 
         if(v == playstate)

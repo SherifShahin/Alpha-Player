@@ -9,8 +9,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +67,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final viewHolder holder, final int position) {
 
         if(songs.get(position).getImage() != null) {
             holder.imageView.setImageBitmap(songs.get(position).getImage());
@@ -84,7 +87,20 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.vi
                     musicPlayerControl.setSong(songs.get(position), position);
                     musicPlayerControl.intentToService("playFirst");
 
+                ActivityOptionsCompat activityOptions= null;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
+                            Pair.create(holder.itemView.findViewById(R.id.main_song_title), "songtitle"),
+                            Pair.create(holder.itemView.findViewById(R.id.main_song_artist), "songartist")
+                    );
+                    context.startActivity(new Intent(context,NowPlaying.class),activityOptions.toBundle());
+                }
+
+                else
                 context.startActivity(new Intent(context,NowPlaying.class));
+
             }
         });
 
