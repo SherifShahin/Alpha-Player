@@ -66,7 +66,8 @@ public class FavouritesFragment extends Fragment
         }
 
 
-        if(!fav_frag_songs.isEmpty()) {
+        if(!fav_frag_songs.isEmpty())
+        {
             favouritesAdapter = new FavouritesAdapter(fav_frag_songs,getContext());
             recyclerView.setAdapter(favouritesAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

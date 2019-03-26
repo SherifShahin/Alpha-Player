@@ -127,6 +127,10 @@ public class BackgroundService extends Service
         {
             musicPlayerControl.playNext();
         }
+        else if(type.equalsIgnoreCase("prev"))
+        {
+            musicPlayerControl.pvPlay();
+        }
 
 
         Intent myIntent = new Intent(this, MainActivity.class);
@@ -159,6 +163,12 @@ public class BackgroundService extends Service
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
             notificationBuilder.setLargeIcon(bitmap);
         }
+
+        Intent PrevIntent = new Intent(this, BackgroundService.class);
+        PrevIntent.putExtra("type","prev");
+        PendingIntent pendingPreIntent = PendingIntent.getService(this, 2,PrevIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationBuilder.addAction(R.drawable.prev_noti, "PREV",pendingPreIntent);
 
         if(type.equalsIgnoreCase("play") || type.equalsIgnoreCase("playFirst"))
         {
