@@ -1,19 +1,21 @@
 
+
 # Alpha Player
 Android Music Player 
 ## Screenshots
-![enter image description here](https://lh3.googleusercontent.com/Ot7MTVttEJKwjz92hNxMyQbNXq6o06U8CB1vw6-9YZnkzyvIgUdzm7lrGQQodSFYZ8kAE2JQg2Q)
+![enter image description here](https://lh3.googleusercontent.com/5XUWwDZ_kwptOdjiJ_9lkOqcsfdrfrDFgnb_PALcA9Wk2M2hFllk4f80EkBbpxgkHgU7q6UOT-oX)
 
-![enter image description here](https://lh3.googleusercontent.com/EuRJMvpi45N5G5-4oKp7ko0r92DCzyUEqTnIryMgjm26PRMpnnIFJs12zTR7DYVJ8hiEr2a-60I)
+![enter image description here](https://lh3.googleusercontent.com/2gzjrSpY6XRyQntnmA1n_ARivs9HoVSG3a9OrSvjKsXRHGoMKRNPCRLaKRQVA1e61N1T0S07hWIN)
 
-![enter image description here](https://lh3.googleusercontent.com/21ZMTJfyo2PPhie3Kb-6ronAVjbrL8OfyaiaXqT22ShHYfPEOSe2CASGd6N9RVLkbWGd3T4SMvc)
+![enter image description here](https://lh3.googleusercontent.com/CAgqK2AKPoJ3PmkXNwsflk314cj01RltXoCgPwESw804X-Q50Iw1RibS-FTsMLQBLxUY9Cq7FDCh)
 
-![enter image description here](https://lh3.googleusercontent.com/3gRvVSc251wQ7RaDr6R8OFsNbo4n5vJcsLvzWP-7JmPjvTtkxaVUpDhWhDbVhLeArevZEhcRzReH)
+![enter image description here](https://lh3.googleusercontent.com/pTA4h85C21WLVeilhv5vfpUjJhkkEqEmRrROe9_6lFT9Nn_wg0oag5BA8GztUQfG3_dFlUdQMUib)
 
-![enter image description here](https://lh3.googleusercontent.com/RE4UdCjg5TlXkC8FHPmUtwH1LMnDHI111EmV-qhvJ_32nxpUV-5BKToqLXKLEFlop6OJW4hXYfY)
+![enter image description here](https://lh3.googleusercontent.com/b7xBVcPCvdyULx48_oco-rRKnH6YlfszRjNMtdQyN0BJCNXDUPZQFsLM-P-gaL9B4bDW-0ERAKxw)
 
-![enter image description here](https://lh3.googleusercontent.com/KL8zvRxYF3oQj1D4U_7k9yByO8j6WhsdDC0f-_u2kyByrRlGMQAswhSjg35OdsHBmn9rGUhDXL0n)
+![enter image description here](https://lh3.googleusercontent.com/rbj21cfMskYN6EY_bZC0mFHzv52lGBFjgsPwYELty7WLbitJTeDI-Ap33rDsqzdsKypessJaMZPD)
 
+![enter image description here](https://lh3.googleusercontent.com/3bLKI7uBZd3dUR0_ND5cSAwS6dmC6-55925AAoz-L46f7tOqaYGVZb7bhQ_xPL8bDRvTVMfuERLu)
 
 
 ## Features
@@ -23,5 +25,3 @@ Android Music Player
  - Favourites PlayList .
  - Playing In Notification .
  - Delete songs ,Share  Songs and set Song  as ringtone .
-
-
