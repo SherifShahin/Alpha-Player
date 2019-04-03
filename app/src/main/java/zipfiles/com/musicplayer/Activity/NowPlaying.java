@@ -171,6 +171,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         nowPlayingAdapter=new NowPlayingAdapter(control.getCurrent_list(),this);
         recyclerView.setAdapter(nowPlayingAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recyclerView.scrollToPosition(control.getCurrentPosition());
 
 
         SongPlayState.setOnClickListener(this);
@@ -238,12 +239,17 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                        if(control.getShuffleState().equalsIgnoreCase("shuffle"))
                        {
                            thread=true;
+                           control.stop();
+                           control.release();
                            control.playNextWithShuffle();
                            recreate();
                        }
                    }
 
                    else {
+                       thread=true;
+                       control.stop();
+                       control.release();
                        control.playNext();
                        recreate();
                    }
@@ -287,12 +293,16 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         if(v == playNext)
         {
             thread=true;
+            control.stop();
+            control.release();
             control.playNext();
             recreate();
         }
          if(v == pvPlay)
         {
             thread=true;
+            control.stop();
+            control.release();
             control.pvPlay();
             recreate();
         }
@@ -315,6 +325,8 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             control.setinFavourites();
             AddtoFavourite.setImageResource(R.mipmap.like);
         }
+
+        control.intentToService(control.getState());
     }
 
 
@@ -395,6 +407,13 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             rotate.reset();
         }
 
+
+        if(control.inFavourites())
+            AddtoFavourite.setImageResource(R.mipmap.like);
+        else
+            AddtoFavourite.setImageResource(R.mipmap.empty_like);
+
+
     }
 
 
@@ -446,7 +465,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                while (!thread) {
 
                    try {
-                       Thread.sleep(200);
+                       Thread.sleep(500);
                    } catch (InterruptedException e) {
                        e.printStackTrace();
                    }

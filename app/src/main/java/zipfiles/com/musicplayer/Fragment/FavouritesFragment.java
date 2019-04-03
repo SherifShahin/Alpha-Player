@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class FavouritesFragment extends Fragment
 
     private FavouritesAdapter favouritesAdapter;
     private RecyclerView recyclerView;
+    private TextView Favourite_text_view;
 
     private MusicPlayerControl control;
     private ArrayList<Song> fav_frag_songs;
@@ -44,6 +46,8 @@ public class FavouritesFragment extends Fragment
 
 
         recyclerView=view.findViewById(R.id.Favourites_recycleview);
+        Favourite_text_view=view.findViewById(R.id.Favourites_textview);
+
 
         mediaMetadataRetriever =new MediaMetadataRetriever();
 
@@ -66,10 +70,13 @@ public class FavouritesFragment extends Fragment
 
         if(!fav_frag_songs.isEmpty())
         {
+            Favourite_text_view.setVisibility(View.INVISIBLE);
             favouritesAdapter = new FavouritesAdapter(fav_frag_songs,getContext());
             recyclerView.setAdapter(favouritesAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         }
+        else
+            Favourite_text_view.setVisibility(View.VISIBLE);
     }
 
 

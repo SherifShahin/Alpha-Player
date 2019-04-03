@@ -191,4 +191,8 @@ public class AllSongsFragment extends Fragment
         return "No Title";
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 }

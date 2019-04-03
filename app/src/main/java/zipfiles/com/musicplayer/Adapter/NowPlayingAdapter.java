@@ -50,6 +50,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.vi
             public void onClick(View v)
             {
                 musicPlayerControl.stop();
+                musicPlayerControl.release();
                 musicPlayerControl.setSong(songs.get(position),position);
                 musicPlayerControl.intentToService("playFirst");
                 ((Activity)context).recreate();

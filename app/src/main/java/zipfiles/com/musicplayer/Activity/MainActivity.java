@@ -2,6 +2,7 @@ package zipfiles.com.musicplayer.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -46,24 +47,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
 
 
-        control=MusicPlayerControl.getinstace(this);
-
-        control.subscribe(this);
-
         imageView=findViewById(R.id.main_music_control_layout_image);
         title=findViewById(R.id.main_music_control_layout_title);
         artist=findViewById(R.id.main_music_control_layout_artist);
         playstate=findViewById(R.id.main_music_control_layout_artist_playstate);
         layout=findViewById(R.id.main_music_control_layout);
 
-
-
-
         bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         displayFragment(new AllSongsFragment());
 
 
+        control=MusicPlayerControl.getinstace(this);
+        control.subscribe(this);
 
         rotate = new RotateAnimation(
                 0, 360,
@@ -73,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         rotate.setDuration(2200);
         rotate.setRepeatCount(Animation.INFINITE);
-
-
 
 
 
@@ -247,7 +241,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         else if(state.equalsIgnoreCase("playFirst"))
         {
-            imageView.setImageBitmap(control.getSong().getImage());
+            Bitmap bitmap=control.getSong().getImage();
+
+            if(bitmap!=null)
+                imageView.setImageBitmap(control.getSong().getImage());
+            else
+                imageView.setImageResource(R.drawable.placeholder);
+
             title.setText(control.getSong().getTitle());
             artist.setText(control.getSong().getArtist());
         }

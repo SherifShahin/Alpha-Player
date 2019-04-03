@@ -84,6 +84,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.vi
             {
                     musicPlayerControl.setCurrent_list(songs);
                     musicPlayerControl.stop();
+                    musicPlayerControl.release();
                     musicPlayerControl.setSong(songs.get(position), position);
                     musicPlayerControl.intentToService("playFirst");
 

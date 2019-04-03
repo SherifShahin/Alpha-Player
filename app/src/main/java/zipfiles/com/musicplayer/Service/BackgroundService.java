@@ -95,41 +95,59 @@ public class BackgroundService extends Service
 
         type=intent.getStringExtra("type");
 
-        if(type.equalsIgnoreCase("playFirst"))
-        {
-            if(result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                musicPlayerControl.playForFirstTime();
-                musicPlayerControl.setState("play");
+            if (type.equalsIgnoreCase("playFirst"))
+            {
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    musicPlayerControl.playForFirstTime();
+                    musicPlayerControl.setState("play");
+                }
+
+            }
+            else if (type.equalsIgnoreCase("play"))
+            {
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    musicPlayerControl.play();
+                    musicPlayerControl.setState("play");
+                }
+            }
+            else if (type.equals("pause"))
+            {
+                musicPlayerControl.pause();
+                musicPlayerControl.setState("pause");
+            }
+            else if (type.equalsIgnoreCase("stop"))
+            {
+                musicPlayerControl.stop();
+                musicPlayerControl.setState("stop");
+                stopForeground(true);
+                stopSelf();
+                mAudioManager.abandonAudioFocus(afChangeListener);
+            }
+            else if (type.equalsIgnoreCase("next"))
+            {
+                musicPlayerControl.stop();
+                musicPlayerControl.playNext();
+            }
+            else if (type.equalsIgnoreCase("prev"))
+            {
+                musicPlayerControl.stop();
+                musicPlayerControl.pvPlay();
             }
 
-        }
-        else if(type.equalsIgnoreCase("play"))
+
+        String FAV=intent.getStringExtra("FAV");
+
+         if(FAV != null)
+         if(!FAV.isEmpty())
+         if(FAV.equalsIgnoreCase("inFav"))
         {
-            if(result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                musicPlayerControl.play();
-                musicPlayerControl.setState("play");
-            }
+            musicPlayerControl.removeFromFavourites();
+            musicPlayerControl.setState(musicPlayerControl.getState());
         }
-        else if(type.equals("pause"))
+        else if(FAV.equalsIgnoreCase("outFav"))
         {
-            musicPlayerControl.pause();
-            musicPlayerControl.setState("pause");
-        }
-        else if(type.equalsIgnoreCase("stop"))
-        {
-            musicPlayerControl.stop();
-            musicPlayerControl.setState("stop");
-            stopForeground(true);
-            stopSelf();
-            mAudioManager.abandonAudioFocus(afChangeListener);
-        }
-        else if(type.equalsIgnoreCase("next"))
-        {
-            musicPlayerControl.playNext();
-        }
-        else if(type.equalsIgnoreCase("prev"))
-        {
-            musicPlayerControl.pvPlay();
+            musicPlayerControl.setinFavourites();
+            musicPlayerControl.setState(musicPlayerControl.getState());
         }
 
 
@@ -193,6 +211,27 @@ public class BackgroundService extends Service
         PendingIntent pendingNextIntent = PendingIntent.getService(this, 1, NextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationBuilder.addAction(R.drawable.next_noti, "NEXT",pendingNextIntent);
+
+        if(musicPlayerControl.inFavourites())
+        {
+            Intent UnFavIntent = new Intent(this, BackgroundService.class);
+            UnFavIntent.putExtra("FAV","inFav");
+            UnFavIntent.putExtra("type",musicPlayerControl.getState());
+
+            PendingIntent pendingUnFavIntent = PendingIntent.getService(this, 3, UnFavIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            notificationBuilder.addAction(R.drawable.fav_noti, "inFav",pendingUnFavIntent);
+        }
+        else if(!musicPlayerControl.inFavourites())
+        {
+            Intent FavIntent = new Intent(this, BackgroundService.class);
+            FavIntent.putExtra("FAV","outFav");
+            FavIntent.putExtra("type",musicPlayerControl.getState());
+
+            PendingIntent pendingFavIntent = PendingIntent.getService(this, 3, FavIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            notificationBuilder.addAction(R.drawable.not_fav_noti, "outFav",pendingFavIntent);
+        }
 
          notification = notificationBuilder.build();
 

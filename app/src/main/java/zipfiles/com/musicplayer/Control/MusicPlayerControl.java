@@ -24,7 +24,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
     private Context context;
     private static Song song;
     private static String state;
-    private int currentSongPosition=-1;
+    private static int currentSongPosition=-1;
 
     private ArrayList<Song> list;
     private ArrayList<Song> fav_list;
@@ -68,7 +68,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
         musicplayer=new MediaPlayer();
         musicplayer.setVolume(100,100);
-        musicplayer.setLooping(true);
+        musicplayer.setLooping(false);
         mediaMetadataRetriever=new MediaMetadataRetriever();
         list=new ArrayList<>();
         subscribers=new ArrayList<>();
@@ -93,6 +93,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
         this.currentSongPosition=currentSongPosition;
 
         try {
+            musicplayer=new MediaPlayer();
             musicplayer.reset();
             musicplayer.setDataSource(getSong().getPath());
             mediaMetadataRetriever.setDataSource(getSong().getPath());
@@ -132,10 +133,8 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void playForFirstTime()
     {
-        musicplayer.setOnPreparedListener(this);
-
         musicplayer.prepareAsync();
-
+        musicplayer.setOnPreparedListener(this);
         setState("playFirst");
     }
 
@@ -437,11 +436,6 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
         this.shuffleState = shuffleState;
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp)
-    {
-        mp.start();
-    }
 
 
     public void subscribe(Subscriber subscriber)
@@ -463,4 +457,8 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
         }
     }
 
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+    }
 }

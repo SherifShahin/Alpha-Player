@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Folder Name"
         android:layout_gravity="center"
+        android:padding="4dp"
         android:textColor="@android:color/black"
         android:textSize="15dp"
         android:id="@+id/Folder_name"
