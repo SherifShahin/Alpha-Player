@@ -465,7 +465,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                while (!thread) {
 
                    try {
-                       Thread.sleep(500);
+                       Thread.sleep(510);
                    } catch (InterruptedException e) {
                        e.printStackTrace();
                    }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,39 +59,39 @@ public class AllSongsFragment extends Fragment
 
         progressBar.setVisibility(View.VISIBLE);
 
-        mediaMetadataRetriever =new MediaMetadataRetriever();
-        musicPlayerControl=MusicPlayerControl.getinstace(getContext());
-
-
-        File file=new File(Environment.getExternalStorageDirectory().getPath());
-
-        ArrayList<Song> songs=new ArrayList<>();
-
-
-        folders=new ArrayList<>();
-
-        if(musicPlayerControl.isHaveList())
+        if(progressBar.getVisibility() == View.VISIBLE)
         {
-            if(!musicPlayerControl.getList().isEmpty()) {
-                songs = musicPlayerControl.getList();
-                progressBar.setVisibility(View.INVISIBLE);
+            mediaMetadataRetriever =new MediaMetadataRetriever();
+            musicPlayerControl=MusicPlayerControl.getinstace(getContext());
+
+            File file=new File(Environment.getExternalStorageDirectory().getPath());
+
+            ArrayList<Song> songs=new ArrayList<>();
+
+
+            folders=new ArrayList<>();
+
+            if(musicPlayerControl.isHaveList())
+            {
+                if(!musicPlayerControl.getList().isEmpty()) {
+                    songs = musicPlayerControl.getList();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
+            else {
+                songs = findSongs(file);
+                musicPlayerControl.setList(songs);
+                musicPlayerControl.setFolders(folders);
+            }
+
+
+            musicPlayerControl.releaseFav();
+
+
+            allSongsAdapter=new AllSongsAdapter(songs,getContext());
+            recyclerView.setAdapter(allSongsAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         }
-        else {
-            songs = findSongs(file);
-            musicPlayerControl.setList(songs);
-            musicPlayerControl.setFolders(folders);
-        }
-
-
-        musicPlayerControl.releaseFav();
-
-
-        allSongsAdapter=new AllSongsAdapter(songs,getContext());
-        recyclerView.setAdapter(allSongsAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-
-
     }
 
 
@@ -194,5 +195,6 @@ public class AllSongsFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-    }
+ }
+
 }
