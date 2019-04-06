@@ -175,7 +175,10 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public int getCurrentDuration() { return musicplayer.getDuration(); }
 
-    public int getCurrentPosition() { return musicplayer.getCurrentPosition(); }
+    public int getCurrentPosition()
+    {
+        return musicplayer.getCurrentPosition();
+    }
 
 
     public String getCurrentDurationInString()

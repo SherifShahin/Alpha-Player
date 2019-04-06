@@ -239,6 +239,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                        if(control.getShuffleState().equalsIgnoreCase("shuffle"))
                        {
                            thread=true;
+                           new Threading().cancel(true);
                            control.stop();
                            control.release();
                            control.playNextWithShuffle();
@@ -248,6 +249,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
 
                    else {
                        thread=true;
+                       new Threading().cancel(true);
                        control.stop();
                        control.release();
                        control.playNext();
@@ -293,6 +295,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         if(v == playNext)
         {
             thread=true;
+            new Threading().cancel(true);
             control.stop();
             control.release();
             control.playNext();
@@ -301,6 +304,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
          if(v == pvPlay)
         {
             thread=true;
+            new Threading().cancel(true);
             control.stop();
             control.release();
             control.pvPlay();
@@ -465,13 +469,31 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                while (!thread) {
 
                    try {
-                       Thread.sleep(510);
+                       Thread.sleep(500);
                    } catch (InterruptedException e) {
                        e.printStackTrace();
                    }
 
-                   currentposition = control.getCurrentPosition();
-                   publishProgress(currentposition);
+
+                   if(control.getMusicplayer() != null)
+                   {
+                       if(!control.getState().equalsIgnoreCase("stop"))
+                       {
+                           try {
+                               currentposition = control.getCurrentPosition();
+                               publishProgress(currentposition);
+                           }
+                           catch (Exception e)
+                           {
+                               try {
+                                   Thread.sleep(100);
+                               } catch (InterruptedException e1) {
+                                   e1.printStackTrace();
+                               }
+                           }
+
+                       }
+                   }
                }
 
             return null;
@@ -485,7 +507,5 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             cancel(true);
         }
     }
-
-
-
+    
 }
