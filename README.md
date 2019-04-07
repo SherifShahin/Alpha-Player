@@ -5,7 +5,8 @@ Android Music Player
 ## Screenshots
 ![enter image description here](https://lh3.googleusercontent.com/5XUWwDZ_kwptOdjiJ_9lkOqcsfdrfrDFgnb_PALcA9Wk2M2hFllk4f80EkBbpxgkHgU7q6UOT-oX)
 
-![enter image description here](https://lh3.googleusercontent.com/2gzjrSpY6XRyQntnmA1n_ARivs9HoVSG3a9OrSvjKsXRHGoMKRNPCRLaKRQVA1e61N1T0S07hWIN)
+![enter image description here](https://lh3.googleusercontent.com/lXOlzqX2Sa6oJoNFd5nT0P117Hyl0DaXKF3nDIK8eZ-Go75nAnz46eHnjwx475CZd0p7WHStqaz_)
+
 
 ![enter image description here](https://lh3.googleusercontent.com/CAgqK2AKPoJ3PmkXNwsflk314cj01RltXoCgPwESw804X-Q50Iw1RibS-FTsMLQBLxUY9Cq7FDCh)
 
