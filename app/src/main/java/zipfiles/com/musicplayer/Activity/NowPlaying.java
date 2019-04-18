@@ -507,5 +507,4 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             cancel(true);
         }
     }
-    
 }
