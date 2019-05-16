@@ -37,6 +37,8 @@ public class AllSongsFragment extends Fragment
     private RecyclerView recyclerView;
 
     private static String currentFile="";
+    private static String currentFilePath="";
+    private static int currentFileIndex= -1;
 
     private static ArrayList<Song> currentFileSongs=new ArrayList<>();
 
@@ -115,6 +117,8 @@ public class AllSongsFragment extends Fragment
                         Folder folder=new Folder();
                         folder.setName(currentFile);
                         folder.setSongs(currentFileSongs);
+                        folder.setUrl(currentFilePath);
+                        folder.setIndex(++currentFileIndex);
 
                         folders.add(folder);
 
@@ -124,6 +128,7 @@ public class AllSongsFragment extends Fragment
                     else
                     {
                         currentFile=singlefile.getParentFile().getName();
+                        currentFilePath=singlefile.getParentFile().getPath().toString();
                     }
                 }
 

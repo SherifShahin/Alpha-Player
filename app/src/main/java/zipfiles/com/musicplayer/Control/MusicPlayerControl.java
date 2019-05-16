@@ -2,10 +2,13 @@ package zipfiles.com.musicplayer.Control;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -464,4 +467,83 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
     public void onPrepared(MediaPlayer mp) {
         mp.start();
     }
+
+
+    public void searchInFolder(String path)
+    {
+        ArrayList<Song> songs = new ArrayList<>();
+        File root=new File(path);
+        File[] files=root.listFiles();
+
+
+        for(File singlefile:files)
+        {
+
+            if ((singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")
+                    || singlefile.getName().endsWith(".MP3"))
+                    && !singlefile.getName().startsWith("Call"))
+            {
+                mediaMetadataRetriever.setDataSource(singlefile.getPath());
+                Song song=new Song();
+
+                if(getSongTitle().equalsIgnoreCase("No Title"))
+                {
+                    song.setTitle(singlefile.getName());
+                }
+                else
+                    song.setTitle(getSongTitle());
+
+                song.setImage(getSongImage());
+                song.setArtist(getSongArtist());
+                song.setPath(singlefile.getPath());
+                songs.add(song);
+            }
+        }
+
+        Folder folder=new Folder();
+        folder.setSongs(songs);
+        folder.setName(currentFolder.getName());
+        folder.setUrl(currentFolder.getUrl());
+        folder.setIndex(currentFolder.getIndex());
+
+        Folders.set(currentFolder.getIndex(),folder);
+        currentFolder=folder;
+    }
+
+
+    public Bitmap getSongImage()
+    {
+        byte[] art = mediaMetadataRetriever.getEmbeddedPicture();
+
+        Bitmap Songimg = null;
+
+        if (art != null) {
+            Songimg = BitmapFactory.decodeByteArray(art, 0, art.length);
+        }
+
+        if (Songimg != null)
+            return Songimg;
+
+        return null;
+    }
+
+    public String getSongArtist()
+    {
+        String artist=mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        if(artist != null)
+            return artist;
+
+        return "no artist";
+    }
+
+    public String getSongTitle()
+    {
+        String Title=mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+
+        if(Title != null)
+            return Title;
+
+        return "No Title";
+    }
+
 }

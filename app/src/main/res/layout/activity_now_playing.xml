@@ -99,6 +99,14 @@
                 android:layout_gravity="center"
                 android:src="@mipmap/step_forward_dark" />
 
+            <ImageView
+                android:id="@+id/nowplaying_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/share_icon" />
+
 
         </LinearLayout>
 
@@ -150,6 +158,8 @@
             android:layout_marginBottom="-28dp"
             android:text="00:00"
             android:textColor="@android:color/black" />
+
+
 
     </RelativeLayout>
 

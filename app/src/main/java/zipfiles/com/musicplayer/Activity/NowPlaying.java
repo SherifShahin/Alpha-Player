@@ -1,9 +1,11 @@
 package zipfiles.com.musicplayer.Activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +43,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     private ImageView pvPlay;
     private ImageView AddtoFavourite;
     private ImageView ShuffleState;
+    private ImageView SongShare;
     private SeekBar seekBar;
 
     private Thread updateseekbar;
@@ -75,8 +78,8 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         songposition=findViewById(R.id.currentposition);
         AddtoFavourite=findViewById(R.id.nowplaying_favicon);
         ShuffleState=findViewById(R.id.shuffle_state);
+        SongShare=findViewById(R.id.nowplaying_share);
         recyclerView=findViewById(R.id.nowplaying_list_recycleview);
-
 
         control=MusicPlayerControl.getinstace(this);
 
@@ -178,6 +181,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         playNext.setOnClickListener(this);
         pvPlay.setOnClickListener(this);
         AddtoFavourite.setOnClickListener(this);
+        SongShare.setOnClickListener(this);
 
 
         SongRepeatState.setOnClickListener(new View.OnClickListener() {
@@ -315,6 +319,14 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             AddtoFavouriteAction();
         }
 
+        if(v == SongShare)
+        {
+            Uri uri = Uri.parse(control.getSong().getPath());
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("audio/*");
+            share.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(share, "Share"));
+        }
     }
 
     private void AddtoFavouriteAction()
