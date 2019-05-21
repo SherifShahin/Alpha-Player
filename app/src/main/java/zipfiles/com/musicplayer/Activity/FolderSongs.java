@@ -46,7 +46,8 @@ public class FolderSongs extends AppCompatActivity
             public void onRefresh()
             {
                 control.searchInFolder(control.getCurrentFolder().getUrl());
-                allSongsAdapter=new AllSongsAdapter(control.getCurrentFolder().getSongs(),getApplicationContext());
+                allSongsAdapter.setSongs(control.getCurrentFolder().getSongs());
+                allSongsAdapter.notifyDataSetChanged();
                 recyclerView.setAdapter(allSongsAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
                         LinearLayoutManager.VERTICAL,false));

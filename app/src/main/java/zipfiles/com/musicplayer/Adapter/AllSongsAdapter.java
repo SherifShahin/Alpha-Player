@@ -50,6 +50,10 @@ public class AllSongsAdapter extends RecyclerView.Adapter<AllSongsAdapter.viewHo
     private TextView ringtone;
 
 
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
+    }
+
     public AllSongsAdapter(ArrayList<Song> songs, Context context)
     {
         this.songs = songs;
