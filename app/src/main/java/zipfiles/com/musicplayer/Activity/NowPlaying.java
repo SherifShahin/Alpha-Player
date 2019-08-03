@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +32,7 @@ import zipfiles.com.musicplayer.Interface.Subscriber;
 public class NowPlaying extends AppCompatActivity implements View.OnClickListener ,Subscriber
 {
 
-    private LinearLayout layout;
+    private ConstraintLayout layout;
     private TextView SongTitle;
     private TextView SongArtist;
     private TextView duration;
@@ -110,7 +111,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                 Animation.RELATIVE_TO_SELF, 0.5f
         );
 
-        rotate.setDuration(3000);
+        rotate.setDuration(3200);
         rotate.setRepeatCount(Animation.INFINITE);
 
 
