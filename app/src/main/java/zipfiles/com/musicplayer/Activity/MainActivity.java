@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         imageView=findViewById(R.id.main_music_control_layout_image);
         title=findViewById(R.id.main_music_control_layout_title);
         artist=findViewById(R.id.main_music_control_layout_artist);
@@ -60,6 +59,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         control=MusicPlayerControl.getinstace(this);
         control.subscribe(this);
+
+
+        if(!control.isHaveList())
+        {
+            Intent intent = new Intent(this,SplashScreen.class);
+            finish();
+            startActivity(intent);
+        }
 
         rotate = new RotateAnimation(
                 0, 360,
@@ -91,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 playstate.setImageResource(R.drawable.play);
             }
         }
+
 
 
         playstate.setOnClickListener(this);

@@ -1,100 +1,67 @@
-package zipfiles.com.musicplayer.Fragment;
+package zipfiles.com.musicplayer.Activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import zipfiles.com.musicplayer.Adapter.AllSongsAdapter;
-import zipfiles.com.musicplayer.Model.Folder;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
-import zipfiles.com.musicplayer.R;
+import zipfiles.com.musicplayer.Model.Folder;
 import zipfiles.com.musicplayer.Model.Song;
+import zipfiles.com.musicplayer.R;
 
-public class AllSongsFragment extends Fragment
-{
+public class SplashScreen extends AppCompatActivity {
 
     private MusicPlayerControl musicPlayerControl;
-    private static String state;
     private MediaMetadataRetriever mediaMetadataRetriever;
-    private ProgressBar progressBar;
-
-    private AllSongsAdapter allSongsAdapter;
-    private RecyclerView recyclerView;
 
     private static String currentFile="";
     private static String currentFilePath="";
     private static int currentFileIndex= -1;
 
     private static ArrayList<Song> currentFileSongs=new ArrayList<>();
-
     private ArrayList<Folder> folders;
 
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.allsongs_fragment, container,false);
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
 
+        mediaMetadataRetriever =new MediaMetadataRetriever();
+        musicPlayerControl= MusicPlayerControl.getinstace(this);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        final File file=new File(Environment.getExternalStorageDirectory().getPath());
 
-        progressBar=view.findViewById(R.id.progressbar);
-        recyclerView=view.findViewById(R.id.main_recycleview);
+        final ArrayList<Song>[] songs = new ArrayList[]{new ArrayList<>()};
 
-        progressBar.setVisibility(View.VISIBLE);
+        folders = new ArrayList<>();
 
-        if(progressBar.getVisibility() == View.VISIBLE)
-        {
-            mediaMetadataRetriever =new MediaMetadataRetriever();
-            musicPlayerControl=MusicPlayerControl.getinstace(getContext());
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
 
-            File file=new File(Environment.getExternalStorageDirectory().getPath());
+                songs[0] = findSongs(file);
+                musicPlayerControl.setList(songs[0]);
+                musicPlayerControl.setFolders(folders);
 
-            ArrayList<Song> songs=new ArrayList<>();
-
-
-            folders=new ArrayList<>();
-
-            if(musicPlayerControl.isHaveList())
-            {
-                if(!musicPlayerControl.getList().isEmpty()) {
-                    songs = musicPlayerControl.getList();
-                    progressBar.setVisibility(View.INVISIBLE);
+                if(musicPlayerControl.isHaveList()) {
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
                 }
             }
-//            else {
-//                songs = findSongs(file);
-//                musicPlayerControl.setList(songs);
-//                musicPlayerControl.setFolders(folders);
-//            }
+        };
 
+        thread.start();
 
-            musicPlayerControl.releaseFav();
-
-            allSongsAdapter=new AllSongsAdapter(songs,getContext());
-            recyclerView.setAdapter(allSongsAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        }
     }
-
 
     public ArrayList<Song> findSongs(File root)
     {
@@ -155,8 +122,6 @@ public class AllSongsFragment extends Fragment
             }
         }
 
-        progressBar.setVisibility(View.INVISIBLE);
-
         return songs;
     }
 
@@ -196,9 +161,5 @@ public class AllSongsFragment extends Fragment
         return "No Title";
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
- }
 
 }
