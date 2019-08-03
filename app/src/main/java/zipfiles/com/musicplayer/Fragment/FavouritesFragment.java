@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import zipfiles.com.musicplayer.Adapter.AllSongsAdapter;
 import zipfiles.com.musicplayer.Adapter.FavouritesAdapter;
@@ -26,13 +28,17 @@ import zipfiles.com.musicplayer.Model.Song;
 public class FavouritesFragment extends Fragment
 {
 
-    private FavouritesAdapter favouritesAdapter;
     private RecyclerView recyclerView;
     private TextView Favourite_text_view;
+    private ProgressBar progressBar;
 
+    private FavouritesAdapter favouritesAdapter;
     private MusicPlayerControl control;
-    private ArrayList<Song> fav_frag_songs;
+    private  ArrayList<Song> fav_frag_songs;
+    private  ArrayList<Song> songs;
     private MediaMetadataRetriever mediaMetadataRetriever;
+
+    private boolean booleanthread=true;
 
     @Nullable
     @Override
@@ -47,6 +53,7 @@ public class FavouritesFragment extends Fragment
 
         recyclerView=view.findViewById(R.id.Favourites_recycleview);
         Favourite_text_view=view.findViewById(R.id.Favourites_textview);
+        progressBar=view.findViewById(R.id.Favourites_Progressbar);
 
 
         mediaMetadataRetriever =new MediaMetadataRetriever();
@@ -58,25 +65,11 @@ public class FavouritesFragment extends Fragment
         fav_frag_songs=new ArrayList<>();
 
         if(control.getList() != null) {
-            fav_frag_songs = control.getFav_list();
-
-            for(int i=0;i<fav_frag_songs.size();i++)
-            {
-                mediaMetadataRetriever.setDataSource(fav_frag_songs.get(i).getPath());
-                fav_frag_songs.get(i).setImage(getSongImage());
-            }
+            Log.e("control","control");
+            progressBar.setVisibility(View.VISIBLE);
+            getFavSongs();
         }
 
-
-        if(!fav_frag_songs.isEmpty())
-        {
-            Favourite_text_view.setVisibility(View.INVISIBLE);
-            favouritesAdapter = new FavouritesAdapter(fav_frag_songs,getContext());
-            recyclerView.setAdapter(favouritesAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        }
-        else
-            Favourite_text_view.setVisibility(View.VISIBLE);
     }
 
 
@@ -97,9 +90,64 @@ public class FavouritesFragment extends Fragment
         return null;
     }
 
+    public void getFavSongs()
+    {
+        final Thread thread = new Thread(){
+            public void run(){
+
+                while(booleanthread) {
+                    fav_frag_songs = control.getFav_list();
+                    Log.e("favlistsize", "" + fav_frag_songs.size());
+
+                    for (int i = 0; i < fav_frag_songs.size(); i++) {
+                        mediaMetadataRetriever.setDataSource(fav_frag_songs.get(i).getPath());
+                        fav_frag_songs.get(i).setImage(getSongImage());
+                    }
+
+                    booleanthread=false;
+
+                    if(getActivity() != null)
+                    setRecyclerView();
+                }
+            }
+        };
+        thread.start();
+
+    }
+
+    private void setRecyclerView() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (fav_frag_songs != null) {
+
+                        progressBar.setVisibility(View.GONE);
+                        Favourite_text_view.setVisibility(View.GONE);
+                        if (!fav_frag_songs.isEmpty()) {
+                            favouritesAdapter = new FavouritesAdapter(fav_frag_songs, getContext());
+                            recyclerView.setAdapter(favouritesAdapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                        } else
+                            Favourite_text_view.setVisibility(View.VISIBLE);
+
+                    }
+                }
+            });
+        }
+    }
+
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        booleanthread=false;
     }
 }

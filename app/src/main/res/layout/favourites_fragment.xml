@@ -20,8 +20,16 @@
         android:layout_centerInParent="true"
         android:text="no Favourite Songs"
         android:textColor="@android:color/black"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/Favourites_textview"
+        />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:id="@+id/Favourites_Progressbar"
         />
 
 </RelativeLayout>
