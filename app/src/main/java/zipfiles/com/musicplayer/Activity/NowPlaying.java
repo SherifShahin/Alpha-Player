@@ -172,11 +172,12 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         }
 
 
-        nowPlayingAdapter=new NowPlayingAdapter(control.getCurrent_list(),this);
-        recyclerView.setAdapter(nowPlayingAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        recyclerView.scrollToPosition(control.getCurrentPosition());
-
+        if(control.getCurrent_list() != null) {
+            nowPlayingAdapter = new NowPlayingAdapter(control.getCurrent_list(), this);
+            recyclerView.setAdapter(nowPlayingAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            recyclerView.scrollToPosition(control.getCurrentPosition());
+        }
 
         SongPlayState.setOnClickListener(this);
         playNext.setOnClickListener(this);

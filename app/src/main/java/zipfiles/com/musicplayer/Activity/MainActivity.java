@@ -3,6 +3,8 @@ package zipfiles.com.musicplayer.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +12,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -23,8 +26,11 @@ import zipfiles.com.musicplayer.Fragment.AllSongsFragment;
 import zipfiles.com.musicplayer.Fragment.FavouritesFragment;
 import zipfiles.com.musicplayer.Fragment.FolderFragment;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
+import zipfiles.com.musicplayer.Model.Song;
 import zipfiles.com.musicplayer.R;
 import zipfiles.com.musicplayer.Interface.Subscriber;
+import zipfiles.com.musicplayer.Service.BackgroundService;
+import zipfiles.com.musicplayer.Storage.SharedPrefManger;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,View.OnClickListener,Subscriber
 {
@@ -40,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private MusicPlayerControl control;
 
     private  RotateAnimation rotate;
+
+    private SharedPrefManger sharedPrefManger;
+
+    private MediaMetadataRetriever mediaMetadataRetriever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +70,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         control=MusicPlayerControl.getinstace(this);
         control.subscribe(this);
 
-
         if(!control.isHaveList())
         {
             Intent intent = new Intent(this,SplashScreen.class);
-            finish();
             startActivity(intent);
+            finish();
+            Log.e("intent","intent");
         }
+
+        sharedPrefManger = SharedPrefManger.getInstance(this);
+        mediaMetadataRetriever = new MediaMetadataRetriever();
+
 
         rotate = new RotateAnimation(
                 0, 360,
@@ -81,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         if(control.getSong() != null)
         {
+            Log.e("if","");
             imageView.setImageBitmap(control.getSong().getImage());
             title.setText(control.getSong().getTitle());
             artist.setText(control.getSong().getArtist());
@@ -98,8 +113,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 playstate.setImageResource(R.drawable.play);
             }
         }
-
-
+        else
+        {
+            if(sharedPrefManger.getLastSong() != null)
+            {
+                Song song = sharedPrefManger.getLastSong();
+                mediaMetadataRetriever.setDataSource(song.getPath());
+                song.setImage(getSongImage());
+                control.setSong(song,0);
+            }
+        }
 
         playstate.setOnClickListener(this);
         layout.setOnClickListener(this);
@@ -110,7 +133,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
     }
+
 
     @Override
     protected void onResume()
@@ -197,11 +222,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         Pair.create(findViewById(R.id.main_music_control_layout_title), "songtitle"),
                         Pair.create(findViewById(R.id.main_music_control_layout_artist), "songartist")
                 );
-                startActivity(new Intent(this,NowPlaying.class),activityOptions.toBundle());
+                if(control.getState().equals("stop")) {
+                    control.intentToService("playFirst");
+                    startActivity(new Intent(this, NowPlaying.class), activityOptions.toBundle());
+                }
+                else
+                    startActivity(new Intent(this, NowPlaying.class), activityOptions.toBundle());
             }
 
-            else
-               startActivity(new Intent(this,NowPlaying.class));
+            else {
+                if (control.getState().equals("stop")) {
+                    control.intentToService("playFirst");
+                    startActivity(new Intent(this, NowPlaying.class));
+                } else
+                    startActivity(new Intent(this, NowPlaying.class));
+            }
         }
 
         if(v == playstate)
@@ -271,4 +306,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             rotate.reset();
         }
     }
+
+    public Bitmap getSongImage()
+    {
+        byte[] art = mediaMetadataRetriever.getEmbeddedPicture();
+
+        Bitmap Songimg = null;
+
+        if (art != null) {
+            Songimg = BitmapFactory.decodeByteArray(art, 0, art.length);
+        }
+
+        if (Songimg != null)
+            return Songimg;
+
+        return null;
+    }
+
+
 }

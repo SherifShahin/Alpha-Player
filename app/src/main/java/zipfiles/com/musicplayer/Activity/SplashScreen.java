@@ -7,10 +7,17 @@ import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
 import zipfiles.com.musicplayer.Model.Folder;
@@ -38,6 +45,9 @@ public class SplashScreen extends AppCompatActivity {
         musicPlayerControl= MusicPlayerControl.getinstace(this);
 
         final File file=new File(Environment.getExternalStorageDirectory().getPath());
+        final File externalstorage =Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+
+        Log.e("internal",file.getPath());
 
         final ArrayList<Song>[] songs = new ArrayList[]{new ArrayList<>()};
 
@@ -49,12 +59,16 @@ public class SplashScreen extends AppCompatActivity {
                 super.run();
 
                 songs[0] = findSongs(file);
+                if(externalstorage != null) {
+                    songs[0].addAll(getExternalSongs(externalstorage));
+                }
                 musicPlayerControl.setList(songs[0]);
                 musicPlayerControl.setFolders(folders);
 
                 if(musicPlayerControl.isHaveList()) {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
+                    Log.e("splash","back to Main");
                 }
             }
         };
@@ -62,6 +76,71 @@ public class SplashScreen extends AppCompatActivity {
         thread.start();
 
     }
+
+    public ArrayList<Song> getExternalSongs(File root)
+    {
+        ArrayList<Song> songs = new ArrayList<>();
+        File[] files = root.listFiles();
+
+
+        if(files != null)
+        for (File singlefile : files)
+        {
+            if (singlefile.isDirectory() && !singlefile.isHidden())
+            {
+                songs.addAll(findSongs(singlefile));
+            }
+            else
+            {
+                if(!currentFile.equals(singlefile.getParentFile().getName()))
+                {
+                    if(!currentFile.isEmpty() && !currentFileSongs.isEmpty()){
+                        Folder folder=new Folder();
+                        folder.setName(currentFile);
+                        folder.setSongs(currentFileSongs);
+                        folder.setUrl(currentFilePath);
+                        folder.setIndex(++currentFileIndex);
+
+                        folders.add(folder);
+
+                        currentFile=singlefile.getParentFile().getName();
+                        currentFileSongs=new ArrayList<>();
+                    }
+                    else
+                    {
+                        currentFile=singlefile.getParentFile().getName();
+                        currentFilePath=singlefile.getParentFile().getPath().toString();
+                    }
+                }
+
+
+                if ((singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")
+                        || singlefile.getName().endsWith(".MP3"))
+                        && !singlefile.getName().startsWith("Call"))
+                {
+                    mediaMetadataRetriever.setDataSource(singlefile.getPath());
+                    Song song=new Song();
+
+                    if(getSongTitle().equalsIgnoreCase("No Title"))
+                    {
+                        song.setTitle(singlefile.getName());
+                    }
+                    else
+                        song.setTitle(getSongTitle());
+
+                    song.setImage(getSongImage());
+                    song.setArtist(getSongArtist());
+                    song.setPath(singlefile.getPath());
+                    songs.add(song);
+                    currentFileSongs.add(song);
+                }
+            }
+        }
+
+        return songs;
+
+    }
+
 
     public ArrayList<Song> findSongs(File root)
     {
@@ -160,6 +239,5 @@ public class SplashScreen extends AppCompatActivity {
 
         return "No Title";
     }
-
 
 }

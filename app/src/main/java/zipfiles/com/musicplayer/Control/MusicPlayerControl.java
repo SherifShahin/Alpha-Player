@@ -26,7 +26,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
     private static MusicPlayerControl instance;
     private Context context;
     private static Song song;
-    private static String state;
+    private static String state="stop";
     private static int currentSongPosition=-1;
 
     private ArrayList<Song> list;
@@ -103,6 +103,10 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        SharedPrefManger sharedPrefManger = SharedPrefManger.getInstance(context);
+
+        sharedPrefManger.saveLastSong(getSong());
     }
 
     public Song getSong() {

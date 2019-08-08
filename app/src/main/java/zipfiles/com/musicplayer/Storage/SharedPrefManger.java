@@ -35,7 +35,6 @@ public class SharedPrefManger
 
     public void set_Favourites(ArrayList<Song> list)
     {
-
         SharedPreferences sharedPreferences=context.getSharedPreferences(Shared_name, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
 
@@ -60,29 +59,35 @@ public class SharedPrefManger
         return list;
     }
 
-
-
-
-
-    public void setHavePosts()
+    public void saveLastSong(Song song)
     {
         SharedPreferences sharedPreferences=context.getSharedPreferences(Shared_name, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
 
-        editor.putBoolean("haveposts",true);
+        editor.putString("songTitle",song.getTitle());
+        editor.putString("songPath",song.getPath());
+        editor.putString("songArtist",song.getArtist());
 
-        editor.apply();
         editor.commit();
 
     }
 
-
-    public boolean havePosts()
+    public Song getLastSong()
     {
         SharedPreferences sharedPreferences=context.getSharedPreferences(Shared_name, Context.MODE_PRIVATE);
 
-        return sharedPreferences.getBoolean("haveposts",false);
+        Song song= new Song();
+
+        song.setTitle(sharedPreferences.getString("songTitle",""));
+        song.setPath(sharedPreferences.getString("songPath",""));
+        song.setArtist(sharedPreferences.getString("songArtist",""));
+
+        if(song.getTitle().isEmpty())
+            return null;
+        else
+        return song;
     }
+
 
 
     public void clear()
