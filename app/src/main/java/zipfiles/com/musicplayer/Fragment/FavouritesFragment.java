@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import zipfiles.com.musicplayer.Adapter.AllSongsAdapter;
@@ -126,6 +127,7 @@ public class FavouritesFragment extends Fragment
                         progressBar.setVisibility(View.GONE);
                         Favourite_text_view.setVisibility(View.GONE);
                         if (!fav_frag_songs.isEmpty()) {
+                            Collections.reverse(fav_frag_songs);
                             favouritesAdapter = new FavouritesAdapter(fav_frag_songs, getContext());
                             recyclerView.setAdapter(favouritesAdapter);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
