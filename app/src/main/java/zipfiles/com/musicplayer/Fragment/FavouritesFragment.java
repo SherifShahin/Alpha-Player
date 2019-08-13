@@ -1,5 +1,8 @@
 package zipfiles.com.musicplayer.Fragment;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -16,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +30,7 @@ import zipfiles.com.musicplayer.Adapter.FavouritesAdapter;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
 import zipfiles.com.musicplayer.R;
 import zipfiles.com.musicplayer.Model.Song;
+import zipfiles.com.musicplayer.ViewModel.FavouritesViewModel;
 
 public class FavouritesFragment extends Fragment
 {
@@ -35,11 +41,8 @@ public class FavouritesFragment extends Fragment
 
     private FavouritesAdapter favouritesAdapter;
     private MusicPlayerControl control;
-    private  ArrayList<Song> fav_frag_songs;
-    private  ArrayList<Song> songs;
-    private MediaMetadataRetriever mediaMetadataRetriever;
 
-    private boolean booleanthread=true;
+    private FavouritesViewModel favouritesViewModel;
 
     @Nullable
     @Override
@@ -48,96 +51,43 @@ public class FavouritesFragment extends Fragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        favouritesViewModel = ViewModelProviders.of(this).get(FavouritesViewModel.class);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+            recyclerView=view.findViewById(R.id.Favourites_recycleview);
+            Favourite_text_view=view.findViewById(R.id.Favourites_textview);
+            progressBar=view.findViewById(R.id.Favourites_Progressbar);
 
-        recyclerView=view.findViewById(R.id.Favourites_recycleview);
-        Favourite_text_view=view.findViewById(R.id.Favourites_textview);
-        progressBar=view.findViewById(R.id.Favourites_Progressbar);
+            control=MusicPlayerControl.getinstace(getContext());
 
-
-        mediaMetadataRetriever =new MediaMetadataRetriever();
-
-        control=MusicPlayerControl.getinstace(getContext());
-
-        control.releaseFav();
-
-        fav_frag_songs=new ArrayList<>();
-
-        if(control.getList() != null) {
-            Log.e("control","control");
             progressBar.setVisibility(View.VISIBLE);
-            getFavSongs();
-        }
 
-    }
-
-
-
-    public Bitmap getSongImage()
-    {
-        byte[] art = mediaMetadataRetriever.getEmbeddedPicture();
-
-        Bitmap Songimg = null;
-
-        if (art != null) {
-            Songimg = BitmapFactory.decodeByteArray(art, 0, art.length);
-        }
-
-        if (Songimg != null)
-            return Songimg;
-
-        return null;
-    }
-
-    public void getFavSongs()
-    {
-        final Thread thread = new Thread(){
-            public void run(){
-
-                while(booleanthread) {
-                    fav_frag_songs = control.getFav_list();
-                    Log.e("favlistsize", "" + fav_frag_songs.size());
-
-                    for (int i = 0; i < fav_frag_songs.size(); i++) {
-                        mediaMetadataRetriever.setDataSource(fav_frag_songs.get(i).getPath());
-                        fav_frag_songs.get(i).setImage(getSongImage());
-                    }
-
-                    booleanthread=false;
-
-                    if(getActivity() != null)
-                    setRecyclerView();
-                }
-            }
-        };
-        thread.start();
-
-    }
-
-    private void setRecyclerView() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
+            final Observer<List<Song>> SongsObserver = new Observer<List<Song>>() {
                 @Override
-                public void run() {
-
-                    if (fav_frag_songs != null) {
-
-                        progressBar.setVisibility(View.GONE);
-                        Favourite_text_view.setVisibility(View.GONE);
-                        if (!fav_frag_songs.isEmpty()) {
-                            Collections.reverse(fav_frag_songs);
-                            favouritesAdapter = new FavouritesAdapter(fav_frag_songs, getContext());
+                public void onChanged(@Nullable List<Song> songs)
+                {
+                    progressBar.setVisibility(View.GONE);
+                    Favourite_text_view.setVisibility(View.GONE);
+                    if(songs != null)
+                        if (!songs.isEmpty())
+                        {
+                            favouritesAdapter = new FavouritesAdapter((ArrayList<Song>) songs, getContext());
                             recyclerView.setAdapter(favouritesAdapter);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                        } else
+                        }
+                        else
                             Favourite_text_view.setVisibility(View.VISIBLE);
-
-                    }
                 }
-            });
-        }
+            };
+
+            favouritesViewModel.getSongs(control).removeObservers(this);
+            favouritesViewModel.getSongs(control).observe(this,SongsObserver);
     }
 
 
@@ -150,6 +100,5 @@ public class FavouritesFragment extends Fragment
     public void onDestroyView() {
         super.onDestroyView();
 
-        booleanthread=false;
     }
 }
