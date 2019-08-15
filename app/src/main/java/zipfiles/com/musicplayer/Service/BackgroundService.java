@@ -166,7 +166,7 @@ public class BackgroundService extends Service
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
                 .setOngoing(true)
                 .setSmallIcon(R.mipmap.main_logo)
-                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle())
+                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2,3,4))
                 .setContentText(musicPlayerControl.getSong().getArtist())
                 .setContentTitle(musicPlayerControl.getSong().getTitle())
                 .setContentIntent(pendingIntent)
