@@ -5,8 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -92,6 +94,9 @@ public class BackgroundService extends Service
                 // Request permanent focus.
                 AudioManager.AUDIOFOCUS_GAIN);
 
+        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+
+        NoisyAudioStreamReceiver myNoisyAudioStreamReceiver = new NoisyAudioStreamReceiver();
 
         type=intent.getStringExtra("type");
 
@@ -100,6 +105,7 @@ public class BackgroundService extends Service
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     musicPlayerControl.playForFirstTime();
                     musicPlayerControl.setState("play");
+                    registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
                 }
 
             }
@@ -108,15 +114,24 @@ public class BackgroundService extends Service
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     musicPlayerControl.play();
                     musicPlayerControl.setState("play");
+                    registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
                 }
             }
             else if (type.equals("pause"))
             {
                 musicPlayerControl.pause();
                 musicPlayerControl.setState("pause");
+                registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
             }
             else if (type.equalsIgnoreCase("stop"))
             {
+                unregisterReceiver(myNoisyAudioStreamReceiver);
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.cancel(1);
+
+                Intent sintent = new Intent(this, BackgroundService.class);
+
+                stopService(sintent);
                 musicPlayerControl.stop();
                 musicPlayerControl.setState("stop");
                 stopForeground(true);
@@ -245,6 +260,17 @@ public class BackgroundService extends Service
     public void onDestroy() {
         super.onDestroy();
 
+        NoisyAudioStreamReceiver myNoisyAudioStreamReceiver = new NoisyAudioStreamReceiver();
+
+        unregisterReceiver(myNoisyAudioStreamReceiver);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
+
+        Intent intent = new Intent(this, BackgroundService.class);
+
+        stopService(intent);
+
         musicPlayerControl.stop();
         stopForeground(true);
         stopSelf();
@@ -264,6 +290,16 @@ public class BackgroundService extends Service
         return channelId;
     }
 
+    private class NoisyAudioStreamReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                musicPlayerControl.intentToService("pause");
+            }
+        }
+    }
 
 }
+
+
 
