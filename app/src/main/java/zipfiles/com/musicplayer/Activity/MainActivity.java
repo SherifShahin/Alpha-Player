@@ -2,6 +2,7 @@ package zipfiles.com.musicplayer.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -13,6 +14,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,6 +28,7 @@ import zipfiles.com.musicplayer.Fragment.AllSongsFragment;
 import zipfiles.com.musicplayer.Fragment.FavouritesFragment;
 import zipfiles.com.musicplayer.Fragment.FolderFragment;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
+import zipfiles.com.musicplayer.HardButtonReceiver;
 import zipfiles.com.musicplayer.Model.Song;
 import zipfiles.com.musicplayer.R;
 import zipfiles.com.musicplayer.Interface.Subscriber;
@@ -55,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BackgroundService.HardButtonReceiver buttonReceiver = new BackgroundService.HardButtonReceiver();
+        IntentFilter IntentF = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
+        IntentF.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(buttonReceiver, IntentF);
 
         imageView=findViewById(R.id.main_music_control_layout_image);
         title=findViewById(R.id.main_music_control_layout_title);
@@ -323,5 +331,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return null;
     }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode == KeyEvent.KEYCODE_HEADSETHOOK){
+//
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
 }

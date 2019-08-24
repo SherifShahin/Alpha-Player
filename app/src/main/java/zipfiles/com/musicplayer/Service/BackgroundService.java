@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,6 +18,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.KeyEvent;
 
 import zipfiles.com.musicplayer.Activity.MainActivity;
 import zipfiles.com.musicplayer.Activity.NowPlaying;
@@ -97,6 +100,11 @@ public class BackgroundService extends Service
         IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
         NoisyAudioStreamReceiver myNoisyAudioStreamReceiver = new NoisyAudioStreamReceiver();
+
+//        HardButtonReceiver buttonReceiver = new HardButtonReceiver();
+//        IntentFilter IntentF = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
+//        IntentF.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+//        registerReceiver(buttonReceiver, IntentF);
 
         type=intent.getStringExtra("type");
 
@@ -290,6 +298,8 @@ public class BackgroundService extends Service
         return channelId;
     }
 
+
+
     private class NoisyAudioStreamReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -298,6 +308,43 @@ public class BackgroundService extends Service
             }
         }
     }
+
+    public static class HardButtonReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MusicPlayerControl musicPlayerControl = MusicPlayerControl.getinstace(context);
+            abortBroadcast();
+            KeyEvent key = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+            if(key.getAction() == KeyEvent.ACTION_DOWN) {
+                int keycode = key.getKeyCode();
+                if(keycode == KeyEvent.KEYCODE_MEDIA_NEXT)
+                {
+                    musicPlayerControl.intentToService("next");
+                }
+                else if(keycode == KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+                {
+                    musicPlayerControl.intentToService("prev");
+                }
+                else if(keycode == KeyEvent.KEYCODE_HEADSETHOOK) {
+
+                    if(musicPlayerControl.getState().equals("start"))
+                    {
+                        musicPlayerControl.intentToService("pause");
+                    }
+                    else if(musicPlayerControl.getState().equals("pause"))
+                    {
+                     musicPlayerControl.intentToService("start");
+                    }
+                    else if(musicPlayerControl.getState().equals("stop"))
+                    {
+                        musicPlayerControl.intentToService("playFirst");
+                    }
+
+                }
+            }
+        }
+    }
+
 
 }
 

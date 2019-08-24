@@ -1,13 +1,17 @@
 package zipfiles.com.musicplayer.Activity;
 
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Collections;
 
 import zipfiles.com.musicplayer.Adapter.AllSongsAdapter;
 import zipfiles.com.musicplayer.Control.MusicPlayerControl;
@@ -20,6 +24,8 @@ public class FolderSongs extends AppCompatActivity
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private MusicPlayerControl control;
+
+    private boolean booleanthread=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,32 @@ public class FolderSongs extends AppCompatActivity
             @Override
             public void onRefresh()
             {
-                control.searchInFolder(control.getCurrentFolder().getUrl());
+               swiprefreshaction();
+
+            }
+        });
+    }
+
+    private void swiprefreshaction()
+    {
+        final Thread thread = new Thread(){
+            public void run(){
+
+                while(booleanthread)
+                {
+                    control.searchInFolder(control.getCurrentFolder().getUrl());
+                    updateuiInTHread();
+                    booleanthread=false;
+                }
+            }
+        };
+        thread.start();
+    }
+
+    private void updateuiInTHread()
+    {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
                 allSongsAdapter.setSongs(control.getCurrentFolder().getSongs());
                 allSongsAdapter.notifyDataSetChanged();
                 recyclerView.setAdapter(allSongsAdapter);
@@ -54,6 +85,18 @@ public class FolderSongs extends AppCompatActivity
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        booleanthread= false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        booleanthread= false;
     }
 }

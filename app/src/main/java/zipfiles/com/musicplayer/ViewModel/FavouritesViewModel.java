@@ -18,7 +18,7 @@ public class FavouritesViewModel extends ViewModel
     private MutableLiveData<List<Song>> songs;
     private MediaMetadataRetriever mediaMetadataRetriever;
     private MusicPlayerControl control;
-    private List<Song> list ;
+    private List<Song> list;
     private boolean booleanthread=true;
 
     public LiveData<List<Song>> getSongs(MusicPlayerControl control)

@@ -39,6 +39,13 @@
             android:name=".Activity.NowPlaying"
             android:label="Now Playing" />
         <activity android:name=".Activity.FolderSongs" />
+
+        <receiver android:name=".HardButtonReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.MEDIA_BUTTON" />
+        </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
