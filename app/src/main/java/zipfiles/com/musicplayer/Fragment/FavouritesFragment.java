@@ -79,8 +79,8 @@ public class FavouritesFragment extends Fragment
                 }
             };
 
-            favouritesViewModel.getSongs(control).removeObservers(this);
-            favouritesViewModel.getSongs(control).observe(this,SongsObserver);
+            favouritesViewModel.getSongs(getContext()).removeObservers(this);
+            favouritesViewModel.getSongs(getContext()).observe(this,SongsObserver);
     }
 
 

@@ -47,6 +47,8 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     private boolean haveList=false;
 
+    private boolean haveFavList = false;
+
     private static String shuffleState="";
 
     private ArrayList<Subscriber> subscribers;
@@ -268,7 +270,9 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void setinFavourites()
     {
-        releaseFav();
+        setHaveFavList(true);
+
+      //  releaseFav();
 
         fav_list.add(song);
 
@@ -278,7 +282,9 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void setSongInFavourites(Song song)
     {
-        releaseFav();
+        setHaveFavList(true);
+
+       // releaseFav();
 
         fav_list.add(song);
 
@@ -288,7 +294,9 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void removeFromFavourites()
     {
-        releaseFav();
+        setHaveFavList(true);
+
+       // releaseFav();
 
        if(!fav_list.isEmpty())
        {
@@ -301,7 +309,9 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public boolean inFavourites()
     {
-        releaseFav();
+        setHaveFavList(true);
+
+       // releaseFav();
 
         if(fav_list != null)
         {
@@ -309,10 +319,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
             {
                 return true;
             }
-
         }
-
-
 
         return false;
     }
@@ -320,9 +327,14 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public ArrayList<Song> getFav_list()
     {
+        setHaveFavList(true);
         return SharedPrefManger.getInstance(context).getFavourites();
     }
 
+    public ArrayList<Song> getFavList()
+    {
+        return fav_list;
+    }
 
     public boolean check()
     {
@@ -396,6 +408,14 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void setHaveList(boolean haveList) {
         this.haveList = haveList;
+    }
+
+    public boolean isHaveFavList() {
+        return haveFavList;
+    }
+
+    public void setHaveFavList(boolean haveFavList) {
+        this.haveFavList = haveFavList;
     }
 
     public ArrayList<Folder> getFolders() {
@@ -549,5 +569,8 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
         return "No Title";
     }
+
+
+
 
 }

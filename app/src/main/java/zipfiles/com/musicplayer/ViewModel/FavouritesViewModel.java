@@ -3,10 +3,12 @@ package zipfiles.com.musicplayer.ViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,22 +20,33 @@ public class FavouritesViewModel extends ViewModel
     private MutableLiveData<List<Song>> songs;
     private MediaMetadataRetriever mediaMetadataRetriever;
     private MusicPlayerControl control;
-    private List<Song> list;
+    private ArrayList<Song> list;
     private boolean booleanthread=true;
 
-    public LiveData<List<Song>> getSongs(MusicPlayerControl control)
+    public LiveData<List<Song>> getSongs(Context context)
     {
-        this.control= control;
-        if (songs == null) {
+        if (songs == null)
+        {
+            control = MusicPlayerControl.getinstace(context);
             songs = new MutableLiveData<>();
             loadSongs();
         }
         return songs;
     }
 
+
+
     private void loadSongs()
     {
-        getFavSongs();
+        if(control.isHaveFavList())
+        {
+            ArrayList<Song> favsongs = control.getFavList();
+            Collections.reverse(favsongs);
+            songs.setValue(favsongs);
+        }
+        else
+            getFavSongs();
+
     }
 
     private Bitmap getSongImage()
@@ -67,6 +80,7 @@ public class FavouritesViewModel extends ViewModel
                         mediaMetadataRetriever.setDataSource(list.get(i).getPath());
                         list.get(i).setImage(getSongImage());
                     }
+                    control.setFav_list(list);
                     Collections.reverse(list);
                     setSongs(list);
                     booleanthread=false;

@@ -87,7 +87,7 @@ public class AllSongsFragment extends Fragment
 //            }
 
 
-            musicPlayerControl.releaseFav();
+           // musicPlayerControl.releaseFav();
 
             allSongsAdapter=new AllSongsAdapter(songs,getContext());
             recyclerView.setAdapter(allSongsAdapter);
