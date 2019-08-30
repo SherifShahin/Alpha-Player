@@ -294,8 +294,6 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void removeFromFavourites()
     {
-        setHaveFavList(true);
-
        // releaseFav();
 
        if(!fav_list.isEmpty())
@@ -309,9 +307,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public boolean inFavourites()
     {
-        setHaveFavList(true);
-
-       // releaseFav();
+        // releaseFav();
 
         if(fav_list != null)
         {

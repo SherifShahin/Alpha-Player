@@ -41,8 +41,8 @@ public class BackgroundService extends Service
                     {
                         // Permanent loss of audio focus
                         //stop playback cleanup resources
-                        musicPlayerControl.intentToService("stop");
-                        mAudioManager.abandonAudioFocus(afChangeListener);
+                        musicPlayerControl.intentToService("pause");
+                     //   mAudioManager.abandonAudioFocus(afChangeListener);
                     }
 
                     else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK)
@@ -97,6 +97,8 @@ public class BackgroundService extends Service
                 // Request permanent focus.
                 AudioManager.AUDIOFOCUS_GAIN);
 
+
+
         IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
         NoisyAudioStreamReceiver myNoisyAudioStreamReceiver = new NoisyAudioStreamReceiver();
@@ -129,6 +131,7 @@ public class BackgroundService extends Service
             {
                 musicPlayerControl.pause();
                 musicPlayerControl.setState("pause");
+                mAudioManager.abandonAudioFocus(afChangeListener);
                 registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
             }
             else if (type.equalsIgnoreCase("stop"))

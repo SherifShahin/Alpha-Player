@@ -41,8 +41,10 @@ public class FavouritesViewModel extends ViewModel
         if(control.isHaveFavList())
         {
             ArrayList<Song> favsongs = control.getFavList();
-            Collections.reverse(favsongs);
-            songs.setValue(favsongs);
+            if(favsongs != null) {
+                Collections.reverse(favsongs);
+                songs.setValue(favsongs);
+            }
         }
         else
             getFavSongs();

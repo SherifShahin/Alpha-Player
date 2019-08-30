@@ -22,6 +22,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import zipfiles.com.musicplayer.Fragment.AllSongsFragment;
@@ -331,7 +332,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return null;
     }
 
-//    @Override
+
+
+    //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if(keyCode == KeyEvent.KEYCODE_HEADSETHOOK){
 //
