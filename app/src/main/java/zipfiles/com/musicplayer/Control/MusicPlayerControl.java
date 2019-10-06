@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 
@@ -22,7 +23,7 @@ import zipfiles.com.musicplayer.Interface.Subscriber;
 
 public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 {
-    private static MediaPlayer  musicplayer;
+    private static MediaPlayer musicplayer;
     private static MusicPlayerControl instance;
     private Context context;
     private static Song song;
@@ -56,19 +57,6 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public MusicPlayerControl(Context context)
     {
-        /**
-         * Function:
-         *      DIC --
-         *
-         * Arguments:
-         *      context -->
-         *
-         * Raise:
-         *
-         * Return:
-         *
-         *
-         * */
         this.context=context;
 
         musicplayer=new MediaPlayer();
@@ -99,6 +87,7 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
         try {
             musicplayer=new MediaPlayer();
+            musicplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             musicplayer.reset();
             musicplayer.setDataSource(getSong().getPath());
             mediaMetadataRetriever.setDataSource(getSong().getPath());
@@ -142,8 +131,8 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void playForFirstTime()
     {
-        musicplayer.prepareAsync();
         musicplayer.setOnPreparedListener(this);
+        musicplayer.prepareAsync();
         setState("playFirst");
     }
 
@@ -270,11 +259,18 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
 
     public void setinFavourites()
     {
-        setHaveFavList(true);
+       // setHaveFavList(true);
 
       //  releaseFav();
 
-        fav_list.add(song);
+        if(isHaveFavList()) {
+            fav_list.add(song);
+        }
+        else
+        {
+            releaseFav();
+            fav_list.add(song);
+        }
 
         SharedPrefManger.getInstance(context).set_Favourites(fav_list);
     }

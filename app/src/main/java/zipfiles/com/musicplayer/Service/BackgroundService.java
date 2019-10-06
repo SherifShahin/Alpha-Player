@@ -103,11 +103,6 @@ public class BackgroundService extends Service
 
         NoisyAudioStreamReceiver myNoisyAudioStreamReceiver = new NoisyAudioStreamReceiver();
 
-//        HardButtonReceiver buttonReceiver = new HardButtonReceiver();
-//        IntentFilter IntentF = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
-//        IntentF.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-//        registerReceiver(buttonReceiver, IntentF);
-
         type=intent.getStringExtra("type");
 
             if (type.equalsIgnoreCase("playFirst"))
@@ -177,8 +172,9 @@ public class BackgroundService extends Service
         }
 
 
-        Intent myIntent = new Intent(this, MainActivity.class);
+        Intent myIntent = new Intent(this, NowPlaying.class);
         myIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
                 0,
