@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -328,6 +329,13 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
         return fav_list;
     }
 
+    public void UpdateFav(ArrayList<Song> fav)
+    {
+        this.fav_list = fav;
+        this.current_list = fav;
+        SharedPrefManger.getInstance(context).set_Favourites(fav_list);
+    }
+
     public boolean check()
     {
         positionInFav=-1;
@@ -562,6 +570,26 @@ public class MusicPlayerControl implements MediaPlayer.OnPreparedListener
         return "No Title";
     }
 
+
+    public ArrayList<Song> search(String query)
+    {
+        ArrayList<Song> seacrhresult = new ArrayList<>();
+        int limit = 20;
+        for(Song s : list) {
+
+            if(s.getTitle().contains(query))
+            {
+                if(limit != 0) {
+                    seacrhresult.add(s);
+                    limit--;
+                }
+                else
+                    break;
+            }
+        }
+
+        return seacrhresult;
+    }
 
 
 

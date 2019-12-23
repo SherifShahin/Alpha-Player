@@ -78,12 +78,14 @@ public class FavouritesViewModel extends ViewModel
                     control.releaseFav();
                     list = control.getFav_list();
 
-                    for (int i = 0; i < list.size(); i++) {
-                        mediaMetadataRetriever.setDataSource(list.get(i).getPath());
-                        list.get(i).setImage(getSongImage());
+                    if(list != null) {
+                            for (int i = 0; i < list.size(); i++) {
+                                mediaMetadataRetriever.setDataSource(list.get(i).getPath());
+                                list.get(i).setImage(getSongImage());
+                            }
+                        control.setFav_list(list);
+                        Collections.reverse(list);
                     }
-                    control.setFav_list(list);
-                    Collections.reverse(list);
                     setSongs(list);
                     booleanthread=false;
                 }
