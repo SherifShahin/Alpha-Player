@@ -25,4 +25,5 @@ Android Music Player
  -  Browse device folders .
  - Favourites PlayList .
  - Playing In Notification .
+ - Search In Songs.
  - Delete songs ,Share  Songs and set Song  as ringtone .
